@@ -1,11 +1,9 @@
-<!DOCTYPE html>
-    <title>Test Title</title>
-    <link rel="stylesheet" href="/app.css">
-
-    <body>
+<x-layout>
+    <x-slot name="content">
         <article>
             <h1>{{$post->title}}</h1>
-            <div>{{$post->body}}</div>
+            <div>{!! $post->body !!}</div>
         </article>
         <h2><a href="/">Back</a></h2>
-    </body>
+    </x-slot>
+</x-layout>

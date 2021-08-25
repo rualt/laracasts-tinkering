@@ -1,8 +1,5 @@
-<!DOCTYPE html>
-    <title>Test Title</title>
-    <link rel="stylesheet" href="/app.css">
-
-    <body>
+<x-layout>
+    <x-slot name="content">
         @foreach ($posts as $post)
             <article>
                 <a href="posts/{{$post->slug}}">
@@ -11,4 +8,5 @@
                 <div>{{$post->excerpt}}</div>
             </article>
         @endforeach
-    </body>
+    </x-slot>
+</x-layout>
