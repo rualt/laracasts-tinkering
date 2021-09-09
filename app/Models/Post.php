@@ -2,65 +2,19 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\ModelNotFoundException;
-use Illuminate\Support\Facades\File;
-use Spatie\YamlFrontMatter\YamlFrontMatter;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
 
-class Post
+class Post extends Model
 {
-    public $title;
+    use HasFactory;
 
-    public $excerpt;
+    // protected $guarded = ['id'];
+    protected $fillable = ['title', 'excerpt', 'body', 'slug', 'category_id'];
 
-    public $date;
-
-    public $body;
-
-    public $slug;
-
-
-    public function __construct($title, $excerpt, $date, $body, $slug)
+    public function category()
     {
-        $this->title = $title;
-
-        $this->excerpt = $excerpt;
-
-        $this->date = $date;
-
-        $this->body = $body;
-
-        $this->slug = $slug;
+        return $this->belongsTo(Category::class);
     }
 
-    public static function all()
-    {
-        return cache()->rememberForever('posts.all', function () {
-            return collect(File::files(resource_path("posts")))
-            ->map(fn($file) => YamlFrontMatter::parseFile($file))
-            ->map(fn($document) => new Post(
-                    $document->title,
-                    $document->excerpt,
-                    $document->data,
-                    $document->body(),
-                    $document->slug
-                )
-            )->sortByDesc('key');
-        });
-    }
-
-    public static function find($slug)
-    {
-        return static::all()->firstWhere('slug', $slug);
-    }
-
-    public static function findOrFail($slug)
-    {
-        $post = static::find($slug);
-
-        if (!$post) {
-            throw new ModelNotFoundException();
-        }
-
-        return $post;
-    }
 }
